@@ -9,7 +9,7 @@ const addNewDriver = async (req, res) => {
         let newDriverData = req.body;
         newDriverData.role = 'driver';
         newDriverData.image =
-            req?.files?.user[0]?.filename || 'default_user.png';
+            req?.files?.user?.[0]?.filename || 'default_user.png';
         if (
             !newDriverData.phone ||
             !newDriverData.password ||
@@ -124,7 +124,7 @@ const updateDriverById = async (req, res) => {
         if (req.files == undefined) {
             newDriverData.image = driver.image;
         } else {
-            newDriverData.image = req?.files?.user[0]?.filename;
+            newDriverData.image = req?.files?.user?.[0]?.filename;
         }
         if (
             !newDriverData.password ||
@@ -251,7 +251,7 @@ const addNewManager = async (req, res) => {
         let newManagerData = req.body;
         newManagerData.role = 'manager';
         newManagerData.image =
-            req?.files?.user[0]?.filename || 'default_user.png';
+            req?.files?.user?.[0]?.filename || 'default_user.png';
         if (
             !newManagerData.phone ||
             !newManagerData.password ||
@@ -365,7 +365,7 @@ const updateManagerById = async (req, res) => {
         if (req.files == undefined) {
             newManagerData.image = manager.image;
         } else {
-            newManagerData.image = req?.files?.user[0]?.filename;
+            newManagerData.image = req?.files?.user?.[0]?.filename;
         }
         if (
             !newManagerData.password ||
@@ -508,7 +508,7 @@ const updateAdminById = async (req, res) => {
         if (req.files == undefined) {
             newAdminData.image = admin.image;
         } else {
-            newAdminData.image = req?.files?.user[0]?.filename;
+            newAdminData.image = req?.files?.user?.[0]?.filename;
         }
         if (
             !newAdminData.password ||

@@ -9,6 +9,7 @@ const register = async (req, res) => {
         await uploadFile(req, res);
         let newUserData = req.body;
         newUserData.role = 'admin';
+        console.log(req.files);
         newUserData.image = req?.files?.user[0]?.filename || 'default_user.png';
         if (
             !newUserData.phone ||
