@@ -1,37 +1,30 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const { User } = require('../models/ver1/models');
+const { ADM_User } = require('../models/ver1/models');
 const uploadFile = require('./uploadFileMiddleware');
 
 const register = async (req, res) => {
     try {
         await uploadFile(req, res);
-        console.log(123);
-        if (req.file == undefined) {
-            return res.status(400).json({
-                resCode: 400,
-                resMessage: 'Upload a file please!'
-            });
-        }
-        let newDriverData = req.body;
-        newDriverData.role = 'admin';
+        let newUserData = req.body;
+        newUserData.role = 'admin';
+        newUserData.image = req?.files?.user[0]?.filename || 'default_user.png';
         if (
-            !newDriverData.phone ||
-            !newDriverData.password ||
-            !newDriverData.email ||
-            !newDriverData.firstName ||
-            !newDriverData.lastName ||
-            !newDriverData.gender ||
-            !newDriverData.dob
+            !newUserData.phone ||
+            !newUserData.password ||
+            !newUserData.email ||
+            !newUserData.firstName ||
+            !newUserData.lastName ||
+            !newUserData.gender ||
+            !newUserData.dob
         ) {
             return res.status(400).json({
                 resCode: 400,
                 resMessage: 'Missing input value(s).'
             });
         }
-        let isEmailExist = await isEmailExisted(newDriverData.email);
-        let isPhoneExist = await isPhoneExisted(newDriverData.phone);
+        let isPhoneExist = await isPhoneExisted(newUserData.phone);
         if (isPhoneExist) {
             return res.status(400).json({
                 resCode: 400,
@@ -39,28 +32,24 @@ const register = async (req, res) => {
                     'Phone number is already used, please choose another phone number.'
             });
         }
-        if (isEmailExist) {
-            return res.status(400).json({
-                resCode: 400,
-                resMessage: 'Email already used, please choose another email.'
-            });
-        }
         let salt = await bcrypt.genSalt(10);
-        let encodedPassword = await bcrypt.hash(newDriverData.password, salt);
-        let newDriver = new User({
-            phone: newDriverData.phone,
+        let encodedPassword = await bcrypt.hash(newUserData.password, salt);
+        let newUser = new ADM_User({
+            phone: newUserData.phone,
             password: encodedPassword,
-            email: newDriverData.email,
-            firstName: newDriverData.firstName,
-            lastName: newDriverData.lastName,
-            gender: newDriverData.gender,
-            dob: newDriverData.dob,
-            image: req.file.filename,
-            role: newDriverData.role
+            email: newUserData.email,
+            firstName: newUserData.firstName,
+            lastName: newUserData.lastName,
+            gender: newUserData.gender,
+            dob: newUserData.dob,
+            image: newUserData.image,
+            description: newUserData?.description,
+            status: 'off',
+            role: newUserData.role
         });
-        let resData = newDriver.dataValues;
+        let resData = newUser.dataValues;
         console.log(resData);
-        await newDriver.save();
+        await newUser.save();
         delete resData.password;
         return res.status(200).json({
             resCode: 200,
@@ -83,7 +72,7 @@ const login = async (req, res) => {
                 resMessage: 'Missing input value(s).'
             });
         }
-        let userData = await User.findOne({
+        let userData = await ADM_User.findOne({
             where: {
                 phone: reqUserData.phone
             },
@@ -92,7 +81,7 @@ const login = async (req, res) => {
         if (!userData) {
             return res.status(404).json({
                 resCode: 404,
-                resMessage: 'User not found.'
+                resMessage: 'ADM_User not found.'
             });
         }
         let validPassword = await bcrypt.compare(
@@ -136,34 +125,12 @@ const login = async (req, res) => {
 const isPhoneExisted = (phone) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let user = await User.findOne({
+            let user = await ADM_User.findOne({
                 attributes: {
                     exclude: ['password']
                 },
                 where: {
                     phone: phone
-                },
-                raw: true
-            });
-            if (user) {
-                resolve(true);
-            } else {
-                resolve(false);
-            }
-        } catch (err) {
-            reject(err);
-        }
-    });
-};
-const isEmailExisted = (email) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            let user = await User.findOne({
-                attributes: {
-                    exclude: ['password']
-                },
-                where: {
-                    email: email
                 },
                 raw: true
             });

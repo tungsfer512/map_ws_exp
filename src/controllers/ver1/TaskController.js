@@ -1,5 +1,10 @@
 const { Sequelize } = require('sequelize');
-const { Task } = require('../../models/ver1/models');
+const {
+    ADM_Task,
+    ADM_User,
+    ADM_Vehicle,
+    ADM_Area
+} = require('../../models/ver1/models');
 const Op = Sequelize.Op;
 
 // Create
@@ -7,7 +12,7 @@ const addNewTask = async (req, res) => {
     try {
         let newTaskData = req.body;
         if (
-            !newTaskData.userId ||
+            !newTaskData.driverId ||
             !newTaskData.vehicleId ||
             !newTaskData.areaId
         ) {
@@ -16,11 +21,12 @@ const addNewTask = async (req, res) => {
                 resMessage: 'Missing input value(s).'
             });
         }
-        let newTask = new Task({
-            userId: newTaskData.userId,
+        let newTask = new ADM_Task({
+            driverId: newTaskData.driverId,
             vehicleId: newTaskData.vehicleId,
             areaId: newTaskData.areaId,
-            status: newTaskData.status
+            description: newTaskData?.description,
+            status: newTaskData?.status
         });
         let resData = newTask.dataValues;
         await newTask.save();
@@ -39,7 +45,7 @@ const addNewTask = async (req, res) => {
 // Delete
 const deleteTaskById = async (req, res) => {
     try {
-        let task = await Task.findOne({
+        let task = await ADM_Task.findOne({
             where: {
                 id: req.params.taskId
             },
@@ -48,10 +54,10 @@ const deleteTaskById = async (req, res) => {
         if (!task) {
             return res.status(404).json({
                 resCode: 404,
-                resMessage: 'Task not found.'
+                resMessage: 'ADM_Task not found.'
             });
         }
-        await Task.destroy({
+        await ADM_Task.destroy({
             where: {
                 id: req.params.taskId
             },
@@ -59,8 +65,7 @@ const deleteTaskById = async (req, res) => {
         });
         return res.status(200).json({
             resCode: 200,
-            resMessage: 'OK',
-            data: task
+            resMessage: 'OK'
         });
     } catch (err) {
         res.status(500).json({
@@ -72,7 +77,7 @@ const deleteTaskById = async (req, res) => {
 // Update
 const updateTaskById = async (req, res) => {
     try {
-        let task = await Task.findOne({
+        let task = await ADM_Task.findOne({
             where: {
                 id: req.params.taskId
             },
@@ -81,12 +86,12 @@ const updateTaskById = async (req, res) => {
         if (!task) {
             return res.status(404).json({
                 resCode: 404,
-                resMessage: 'Task not found.'
+                resMessage: 'ADM_Task not found.'
             });
         }
         let newTaskData = req.body;
         if (
-            !newTaskData.userId ||
+            !newTaskData.driverId ||
             !newTaskData.vehicleId ||
             !newTaskData.areaId
         ) {
@@ -95,11 +100,12 @@ const updateTaskById = async (req, res) => {
                 resMessage: 'Missing input value(s).'
             });
         }
-        await Task.update(
+        await ADM_Task.update(
             {
-                userId: newTaskData.userId,
+                driverId: newTaskData.driverId,
                 vehicleId: newTaskData.vehicleId,
                 areaId: newTaskData.areaId,
+                description: newTaskData.description,
                 status: newTaskData.status
             },
             {
@@ -109,13 +115,12 @@ const updateTaskById = async (req, res) => {
                 raw: true
             }
         );
-        let resData = await Task.findOne({
+        let resData = await ADM_Task.findOne({
             where: {
                 id: req.params.taskId
             },
             raw: true
         });
-        delete resData.password;
         return res.status(200).json({
             resCode: 200,
             resMessage: 'OK',
@@ -134,7 +139,7 @@ const getAllTodayTask = async (req, res) => {
         let start = new Date();
         start.setUTCHours(0, 0, 0, 0);
         let end = new Date();
-        let tasks = await Task.findAll({
+        let tasks = await ADM_Task.findAll({
             where: {
                 createdAt: {
                     [Op.gt]: start,
@@ -146,7 +151,7 @@ const getAllTodayTask = async (req, res) => {
         if (!tasks) {
             return res.status(404).json({
                 resCode: 404,
-                resMessage: 'Task not found.'
+                resMessage: 'ADM_Task not found.'
             });
         }
         return res.status(200).json({
@@ -163,13 +168,33 @@ const getAllTodayTask = async (req, res) => {
 };
 const getAllTask = async (req, res) => {
     try {
-        let tasks = await Task.findAll({
+        let tasks = await ADM_Task.findAll({
             raw: true
         });
         if (!tasks) {
             return res.status(404).json({
                 resCode: 404,
-                resMessage: 'Task not found.'
+                resMessage: 'ADM_Task not found.'
+            });
+        }
+        for (let i = 0; i < tasks.length; i++) {
+            tasks[i].driver = await ADM_User.findOne({
+                where: {
+                    id: tasks[i].driverId
+                },
+                raw: true
+            });
+            tasks[i].vehicle = await ADM_Vehicle.findOne({
+                where: {
+                    id: tasks[i].vehicleId
+                },
+                raw: true
+            });
+            tasks[i].area = await ADM_Area.findOne({
+                where: {
+                    id: tasks[i].areaId
+                },
+                raw: true
             });
         }
         return res.status(200).json({
@@ -186,9 +211,9 @@ const getAllTask = async (req, res) => {
 };
 const getTop10TaskByUserId = async (req, res) => {
     try {
-        let tasks = await Task.findAll({
+        let tasks = await ADM_Task.findAll({
             where: {
-                userId: req.params.userId
+                driverId: req.params.driverId
             },
             limit: 10,
             raw: true
@@ -196,7 +221,21 @@ const getTop10TaskByUserId = async (req, res) => {
         if (!tasks) {
             return res.status(404).json({
                 resCode: 404,
-                resMessage: 'Task not found.'
+                resMessage: 'ADM_Task not found.'
+            });
+        }
+        for (let i = 0; i < tasks.length; i++) {
+            tasks[i].vehicle = await ADM_Vehicle.findOne({
+                where: {
+                    id: tasks[i].vehicleId
+                },
+                raw: true
+            });
+            tasks[i].area = await ADM_Area.findOne({
+                where: {
+                    id: tasks[i].areaId
+                },
+                raw: true
             });
         }
         return res.status(200).json({
@@ -213,22 +252,40 @@ const getTop10TaskByUserId = async (req, res) => {
 };
 const getTaskById = async (req, res) => {
     try {
-        let tasks = await Task.findOne({
+        let task = await ADM_Task.findOne({
             where: {
                 id: req.params.taskId
             },
             raw: true
         });
-        if (!tasks) {
+        if (!task) {
             return res.status(404).json({
                 resCode: 404,
-                resMessage: 'Task not found.'
+                resMessage: 'ADM_Task not found.'
             });
         }
+        task.driver = await ADM_User.findOne({
+            where: {
+                id: task.driverId
+            },
+            raw: true
+        });
+        task.vehicle = await ADM_Vehicle.findOne({
+            where: {
+                id: task.vehicleId
+            },
+            raw: true
+        });
+        task.area = await ADM_Area.findOne({
+            where: {
+                id: task.areaId
+            },
+            raw: true
+        });
         return res.status(200).json({
             resCode: 200,
             resMessage: 'OK',
-            data: tasks
+            data: task
         });
     } catch (err) {
         return res.status(500).json({
