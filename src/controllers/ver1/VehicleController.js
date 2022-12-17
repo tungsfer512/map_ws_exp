@@ -10,7 +10,7 @@ const addNewVehicle = async (req, res) => {
         await uploadFile(req, res);
         let newVehicleData = req.body;
         newVehicleData.image =
-            req?.files?.vehicle[0]?.filename || 'default_vehicle.png';
+            req?.files?.vehicle?.[0]?.filename || 'default_vehicle.png';
         console.log(newVehicleData);
         if (
             !newVehicleData.engineHours ||
@@ -116,7 +116,7 @@ const updateVehicleById = async (req, res) => {
         if (req.files == undefined) {
             newVehicleData.image = vehicle.image;
         } else {
-            newVehicleData.image = req?.files?.vehicle[0]?.filename;
+            newVehicleData.image = req?.files?.vehicle?.[0]?.filename;
         }
         if (
             !newVehicleData.engineHours ||

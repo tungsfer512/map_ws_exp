@@ -6,7 +6,7 @@ const addNewBin = async (req, res) => {
     try {
         await uploadFile(req, res);
         let newBinData = req.body;
-        newBinData.image = req?.files?.bin[0]?.filename || 'default_bin.png';
+        newBinData.image = req?.files?.bin?.[0]?.filename || 'default_bin.png';
         console.log(newBinData);
         if (
             !newBinData.latitude ||
@@ -108,7 +108,7 @@ const updateBinById = async (req, res) => {
         if (req.files == undefined) {
             newBinData.image = bin.image;
         } else {
-            newBinData.image = req.files.filename;
+            newBinData.image = req?.files?.bin?.[0]?.filename;
         }
         if (
             !newBinData.latitude ||
