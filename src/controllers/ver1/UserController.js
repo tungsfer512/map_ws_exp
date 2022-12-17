@@ -1,4 +1,4 @@
-const { User } = require('../../models/ver1/models');
+const { ADM_User } = require('../../models/ver1/models');
 const bcrypt = require('bcrypt');
 const uploadFile = require('../uploadFileMiddleware');
 
@@ -6,16 +6,10 @@ const uploadFile = require('../uploadFileMiddleware');
 const addNewDriver = async (req, res) => {
     try {
         await uploadFile(req, res);
-        if (req.file == undefined) {
-            return res.status(400).json({
-                resCode: 400,
-                resMessage: 'Upload a file please!'
-            });
-        }
-
         let newDriverData = req.body;
         newDriverData.role = 'driver';
-        newDriverData.image = req.file.filename;
+        newDriverData.image =
+            req?.files?.user[0]?.filename || 'default_user.png';
         if (
             !newDriverData.phone ||
             !newDriverData.password ||
@@ -23,8 +17,7 @@ const addNewDriver = async (req, res) => {
             !newDriverData.firstName ||
             !newDriverData.lastName ||
             !newDriverData.gender ||
-            !newDriverData.dob ||
-            !newDriverData.image
+            !newDriverData.dob
         ) {
             return res.status(400).json({
                 resCode: 400,
@@ -32,7 +25,6 @@ const addNewDriver = async (req, res) => {
             });
         }
         console.log(newDriverData);
-        let isEmailExist = await isEmailExisted(newDriverData.email);
         let isPhoneExist = await isPhoneExisted(newDriverData.phone);
         if (isPhoneExist) {
             return res.status(400).json({
@@ -41,15 +33,9 @@ const addNewDriver = async (req, res) => {
                     'Phone number is already used, please choose another phone number.'
             });
         }
-        if (isEmailExist) {
-            return res.status(400).json({
-                resCode: 400,
-                resMessage: 'Email already used, please choose another email.'
-            });
-        }
         let salt = await bcrypt.genSalt(10);
         let encodedPassword = await bcrypt.hash(newDriverData.password, salt);
-        let newDriver = new User({
+        let newDriver = new ADM_User({
             phone: newDriverData.phone,
             password: encodedPassword,
             email: newDriverData.email,
@@ -58,6 +44,8 @@ const addNewDriver = async (req, res) => {
             gender: newDriverData.gender,
             dob: newDriverData.dob,
             image: newDriverData.image,
+            description: newDriverData?.description,
+            status: 'off',
             role: newDriverData.role
         });
         let resData = newDriver.dataValues;
@@ -78,7 +66,7 @@ const addNewDriver = async (req, res) => {
 // Delete
 const deleteDriverById = async (req, res) => {
     try {
-        let driver = await User.findOne({
+        let driver = await ADM_User.findOne({
             attributes: {
                 exclude: ['password']
             },
@@ -91,10 +79,10 @@ const deleteDriverById = async (req, res) => {
         if (!driver) {
             return res.status(404).json({
                 resCode: 404,
-                resMessage: 'User not found.'
+                resMessage: 'ADM_User not found.'
             });
         }
-        await User.destroy({
+        await ADM_User.destroy({
             where: {
                 id: req.params.userId,
                 role: 'driver'
@@ -103,8 +91,7 @@ const deleteDriverById = async (req, res) => {
         });
         return res.status(200).json({
             resCode: 200,
-            resMessage: 'OK',
-            data: driver
+            resMessage: 'OK'
         });
     } catch (err) {
         res.status(500).json({
@@ -116,7 +103,7 @@ const deleteDriverById = async (req, res) => {
 // Update
 const updateDriverById = async (req, res) => {
     try {
-        let driver = await User.findOne({
+        let driver = await ADM_User.findOne({
             attributes: {
                 exclude: ['password']
             },
@@ -129,15 +116,15 @@ const updateDriverById = async (req, res) => {
         if (!driver) {
             return res.status(404).json({
                 resCode: 404,
-                resMessage: 'User not found.'
+                resMessage: 'ADM_User not found.'
             });
         }
         await uploadFile(req, res);
         let newDriverData = req.body;
-        if (req.file == undefined) {
+        if (req.files == undefined) {
             newDriverData.image = driver.image;
         } else {
-            newDriverData.image = req.file.filename;
+            newDriverData.image = req?.files?.user[0]?.filename;
         }
         if (
             !newDriverData.password ||
@@ -152,16 +139,9 @@ const updateDriverById = async (req, res) => {
                 resMessage: 'Missing input value(s).'
             });
         }
-        let isEmailExist = await isEmailExisted(newDriverData.email);
-        if (isEmailExist && newDriverData.email !== driver.email) {
-            return res.status(400).json({
-                resCode: 400,
-                resMessage: 'Email already used, please choose another email.'
-            });
-        }
         let salt = await bcrypt.genSalt(10);
         let encodedPassword = await bcrypt.hash(newDriverData.password, salt);
-        await User.update(
+        await ADM_User.update(
             {
                 password: encodedPassword,
                 email: newDriverData.email,
@@ -169,7 +149,9 @@ const updateDriverById = async (req, res) => {
                 lastName: newDriverData.lastName,
                 gender: newDriverData.gender,
                 dob: newDriverData.dob,
-                image: newDriverData.image
+                image: newDriverData.image,
+                description: newDriverData?.description,
+                status: newDriverData?.status
             },
             {
                 where: {
@@ -179,7 +161,7 @@ const updateDriverById = async (req, res) => {
                 raw: true
             }
         );
-        let resData = await User.findOne({
+        let resData = await ADM_User.findOne({
             attributes: {
                 exclude: ['password']
             },
@@ -205,7 +187,7 @@ const updateDriverById = async (req, res) => {
 // Read
 const getAllDriver = async (req, res) => {
     try {
-        let drivers = await User.findAll({
+        let drivers = await ADM_User.findAll({
             attributes: {
                 exclude: ['password']
             },
@@ -217,7 +199,7 @@ const getAllDriver = async (req, res) => {
         if (!drivers) {
             return res.status(404).json({
                 resCode: 404,
-                resMessage: 'User not found.'
+                resMessage: 'ADM_User not found.'
             });
         }
         return res.status(200).json({
@@ -234,7 +216,7 @@ const getAllDriver = async (req, res) => {
 };
 const getDriverById = async (req, res) => {
     try {
-        let driver = await User.findOne({
+        let driver = await ADM_User.findOne({
             attributes: {
                 exclude: ['password']
             },
@@ -247,7 +229,7 @@ const getDriverById = async (req, res) => {
         if (!driver) {
             return res.status(404).json({
                 resCode: 404,
-                resMessage: 'User not found.'
+                resMessage: 'ADM_User not found.'
             });
         }
         return res.status(200).json({
@@ -266,14 +248,10 @@ const getDriverById = async (req, res) => {
 const addNewManager = async (req, res) => {
     try {
         await uploadFile(req, res);
-        if (req.file == undefined) {
-            return res.status(400).json({
-                resCode: 400,
-                resMessage: 'Upload a file please!'
-            });
-        }
         let newManagerData = req.body;
         newManagerData.role = 'manager';
+        newManagerData.image =
+            req?.files?.user[0]?.filename || 'default_user.png';
         if (
             !newManagerData.phone ||
             !newManagerData.password ||
@@ -288,7 +266,6 @@ const addNewManager = async (req, res) => {
                 resMessage: 'Missing input value(s).'
             });
         }
-        let isEmailExist = await isEmailExisted(newManagerData.email);
         let isPhoneExist = await isPhoneExisted(newManagerData.phone);
         if (isPhoneExist) {
             return res.status(400).json({
@@ -297,15 +274,9 @@ const addNewManager = async (req, res) => {
                     'Phone number is already used, please choose another phone number.'
             });
         }
-        if (isEmailExist) {
-            return res.status(400).json({
-                resCode: 400,
-                resMessage: 'Email already used, please choose another email.'
-            });
-        }
         let salt = await bcrypt.genSalt(10);
         let encodedPassword = await bcrypt.hash(newManagerData.password, salt);
-        let newManager = new User({
+        let newManager = new ADM_User({
             phone: newManagerData.phone,
             password: encodedPassword,
             email: newManagerData.email,
@@ -313,7 +284,9 @@ const addNewManager = async (req, res) => {
             lastName: newManagerData.lastName,
             gender: newManagerData.gender,
             dob: newManagerData.dob,
-            image: req.file.filename,
+            image: newManagerData.image,
+            description: newManagerData?.description,
+            status: 'off',
             role: newManagerData.role
         });
         let resData = newManager.dataValues;
@@ -334,7 +307,7 @@ const addNewManager = async (req, res) => {
 // Delete
 const deleteManagerById = async (req, res) => {
     try {
-        let manager = await User.findOne({
+        let manager = await ADM_User.findOne({
             attributes: {
                 exclude: ['password']
             },
@@ -347,10 +320,10 @@ const deleteManagerById = async (req, res) => {
         if (!manager) {
             return res.status(404).json({
                 resCode: 404,
-                resMessage: 'User not found.'
+                resMessage: 'ADM_User not found.'
             });
         }
-        await User.destroy({
+        await ADM_User.destroy({
             where: {
                 id: req.params.userId,
                 role: 'manager'
@@ -359,8 +332,7 @@ const deleteManagerById = async (req, res) => {
         });
         return res.status(200).json({
             resCode: 200,
-            resMessage: 'OK',
-            data: manager
+            resMessage: 'OK'
         });
     } catch (err) {
         res.status(500).json({
@@ -372,7 +344,7 @@ const deleteManagerById = async (req, res) => {
 // Update
 const updateManagerById = async (req, res) => {
     try {
-        let manager = await User.findOne({
+        let manager = await ADM_User.findOne({
             attributes: {
                 exclude: ['password']
             },
@@ -385,15 +357,15 @@ const updateManagerById = async (req, res) => {
         if (!manager) {
             return res.status(404).json({
                 resCode: 404,
-                resMessage: 'User not found.'
+                resMessage: 'ADM_User not found.'
             });
         }
         await uploadFile(req, res);
         let newManagerData = req.body;
-        if (req.file == undefined) {
+        if (req.files == undefined) {
             newManagerData.image = manager.image;
         } else {
-            newManagerData.image = req.file.filename;
+            newManagerData.image = req?.files?.user[0]?.filename;
         }
         if (
             !newManagerData.password ||
@@ -408,16 +380,9 @@ const updateManagerById = async (req, res) => {
                 resMessage: 'Missing input value(s).'
             });
         }
-        let isEmailExist = await isEmailExisted(newManagerData.email);
-        if (isEmailExist && newManagerData.email !== manager.email) {
-            return res.status(400).json({
-                resCode: 400,
-                resMessage: 'Email already used, please choose another email.'
-            });
-        }
         let salt = await bcrypt.genSalt(10);
         let encodedPassword = await bcrypt.hash(newManagerData.password, salt);
-        await User.update(
+        await ADM_User.update(
             {
                 password: encodedPassword,
                 email: newManagerData.email,
@@ -425,6 +390,8 @@ const updateManagerById = async (req, res) => {
                 lastName: newManagerData.lastName,
                 gender: newManagerData.gender,
                 dob: newManagerData.dob,
+                description: newManagerData?.description,
+                status: newManagerData?.status,
                 image: newManagerData.image
             },
             {
@@ -435,7 +402,7 @@ const updateManagerById = async (req, res) => {
                 raw: true
             }
         );
-        let resData = await User.findOne({
+        let resData = await ADM_User.findOne({
             attributes: {
                 exclude: ['password']
             },
@@ -461,7 +428,7 @@ const updateManagerById = async (req, res) => {
 // Read
 const getAllManager = async (req, res) => {
     try {
-        let managers = await User.findAll({
+        let managers = await ADM_User.findAll({
             attributes: {
                 exclude: ['password']
             },
@@ -473,7 +440,7 @@ const getAllManager = async (req, res) => {
         if (!managers) {
             return res.status(404).json({
                 resCode: 404,
-                resMessage: 'User not found.'
+                resMessage: 'ADM_User not found.'
             });
         }
         return res.status(200).json({
@@ -490,7 +457,7 @@ const getAllManager = async (req, res) => {
 };
 const getManagerById = async (req, res) => {
     try {
-        let manager = await User.findOne({
+        let manager = await ADM_User.findOne({
             attributes: {
                 exclude: ['password']
             },
@@ -503,7 +470,7 @@ const getManagerById = async (req, res) => {
         if (!manager) {
             return res.status(404).json({
                 resCode: 404,
-                resMessage: 'User not found.'
+                resMessage: 'ADM_User not found.'
             });
         }
         return res.status(200).json({
@@ -518,9 +485,9 @@ const getManagerById = async (req, res) => {
         });
     }
 };
-const getAdminById = async (req, res) => {
+const updateAdminById = async (req, res) => {
     try {
-        let admin = await User.findOne({
+        let admin = await ADM_User.findOne({
             attributes: {
                 exclude: ['password']
             },
@@ -533,7 +500,90 @@ const getAdminById = async (req, res) => {
         if (!admin) {
             return res.status(404).json({
                 resCode: 404,
-                resMessage: 'User not found.'
+                resMessage: 'Admin not found.'
+            });
+        }
+        await uploadFile(req, res);
+        let newAdminData = req.body;
+        if (req.files == undefined) {
+            newAdminData.image = admin.image;
+        } else {
+            newAdminData.image = req?.files?.user[0]?.filename;
+        }
+        if (
+            !newAdminData.password ||
+            !newAdminData.email ||
+            !newAdminData.firstName ||
+            !newAdminData.lastName ||
+            !newAdminData.gender ||
+            !newAdminData.dob
+        ) {
+            return res.status(400).json({
+                resCode: 400,
+                resMessage: 'Missing input value(s).'
+            });
+        }
+        let salt = await bcrypt.genSalt(10);
+        let encodedPassword = await bcrypt.hash(newAdminData.password, salt);
+        await ADM_User.update(
+            {
+                password: encodedPassword,
+                email: newAdminData.email,
+                firstName: newAdminData.firstName,
+                lastName: newAdminData.lastName,
+                gender: newAdminData.gender,
+                dob: newAdminData.dob,
+                description: newAdminData?.description,
+                status: newAdminData?.status,
+                image: newAdminData.image
+            },
+            {
+                where: {
+                    id: req.params.userId,
+                    role: 'admin'
+                },
+                raw: true
+            }
+        );
+        let resData = await ADM_User.findOne({
+            attributes: {
+                exclude: ['password']
+            },
+            where: {
+                id: req.params.userId,
+                role: 'admin'
+            },
+            raw: true
+        });
+        delete resData.password;
+        return res.status(200).json({
+            resCode: 200,
+            resMessage: 'OK',
+            data: resData
+        });
+    } catch (err) {
+        return res.status(500).json({
+            resCode: 500,
+            resMessage: err
+        });
+    }
+};
+const getAdminById = async (req, res) => {
+    try {
+        let admin = await ADM_User.findOne({
+            attributes: {
+                exclude: ['password']
+            },
+            where: {
+                id: req.params.userId,
+                role: 'admin'
+            },
+            raw: true
+        });
+        if (!admin) {
+            return res.status(404).json({
+                resCode: 404,
+                resMessage: 'ADM_User not found.'
             });
         }
         return res.status(200).json({
@@ -552,34 +602,12 @@ const getAdminById = async (req, res) => {
 const isPhoneExisted = (phone) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let user = await User.findOne({
+            let user = await ADM_User.findOne({
                 attributes: {
                     exclude: ['password']
                 },
                 where: {
                     phone: phone
-                },
-                raw: true
-            });
-            if (user) {
-                resolve(true);
-            } else {
-                resolve(false);
-            }
-        } catch (err) {
-            reject(err);
-        }
-    });
-};
-const isEmailExisted = (email) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            let user = await User.findOne({
-                attributes: {
-                    exclude: ['password']
-                },
-                where: {
-                    email: email
                 },
                 raw: true
             });
@@ -604,5 +632,6 @@ module.exports = {
     updateManagerById,
     getAllManager,
     getManagerById,
+    updateAdminById,
     getAdminById
 };

@@ -1,26 +1,24 @@
-const { Bin, Task } = require('../../models/ver1/models');
+const { ADM_Bin, ADM_Area } = require('../../models/ver1/models');
 const uploadFile = require('../uploadFileMiddleware');
 
 // Create
 const addNewBin = async (req, res) => {
     try {
         await uploadFile(req, res);
-        if (req.file == undefined) {
-            return res.status(400).json({
-                resCode: 400,
-                resMessage: 'Upload a file please!'
-            });
-        }
         let newBinData = req.body;
-        newBinData.image = req.file.filename;
+        newBinData.image = req?.files?.bin[0]?.filename || 'default_bin.png';
         console.log(newBinData);
         if (
             !newBinData.latitude ||
             !newBinData.longitude ||
             !newBinData.address ||
             !newBinData.heigth ||
-            !newBinData.weight ||
+            !newBinData.length ||
+            !newBinData.width ||
             !newBinData.maxWeight ||
+            !newBinData.color ||
+            !newBinData.material ||
+            !newBinData.brand ||
             !newBinData.areaId
         ) {
             return res.status(400).json({
@@ -28,15 +26,20 @@ const addNewBin = async (req, res) => {
                 resMessage: 'Missing input value(s).'
             });
         }
-        let newBin = new Bin({
+        let newBin = new ADM_Bin({
             latitude: newBinData.latitude,
             longitude: newBinData.longitude,
             address: newBinData.address,
             heigth: newBinData.heigth,
-            weight: newBinData.weight,
+            length: newBinData.length,
+            width: newBinData.width,
             maxWeight: newBinData.maxWeight,
+            color: newBinData.color,
+            material: newBinData.material,
+            brand: newBinData.brand,
             image: newBinData.image,
-            status: newBinData.status,
+            description: newBinData.description,
+            status: 'empty',
             areaId: newBinData.areaId
         });
         let resData = newBin.dataValues;
@@ -56,7 +59,7 @@ const addNewBin = async (req, res) => {
 // Delete
 const deleteBinById = async (req, res) => {
     try {
-        let bin = await Bin.findOne({
+        let bin = await ADM_Bin.findOne({
             where: {
                 id: req.params.binId
             },
@@ -65,10 +68,10 @@ const deleteBinById = async (req, res) => {
         if (!bin) {
             return res.status(404).json({
                 resCode: 404,
-                resMessage: 'Bin not found.'
+                resMessage: 'ADM_Bin not found.'
             });
         }
-        await Bin.destroy({
+        await ADM_Bin.destroy({
             where: {
                 id: req.params.binId
             },
@@ -76,8 +79,7 @@ const deleteBinById = async (req, res) => {
         });
         return res.status(200).json({
             resCode: 200,
-            resMessage: 'OK',
-            data: bin
+            resMessage: 'OK'
         });
     } catch (err) {
         res.status(500).json({
@@ -89,7 +91,7 @@ const deleteBinById = async (req, res) => {
 // Update
 const updateBinById = async (req, res) => {
     try {
-        let bin = await Bin.findOne({
+        let bin = await ADM_Bin.findOne({
             where: {
                 id: req.params.binId
             },
@@ -98,23 +100,27 @@ const updateBinById = async (req, res) => {
         if (!bin) {
             return res.status(404).json({
                 resCode: 404,
-                resMessage: 'Bin not found.'
+                resMessage: 'ADM_Bin not found.'
             });
         }
         await uploadFile(req, res);
         let newBinData = req.body;
-        if (req.file == undefined) {
+        if (req.files == undefined) {
             newBinData.image = bin.image;
         } else {
-            newBinData.image = req.file.filename;
+            newBinData.image = req.files.filename;
         }
         if (
             !newBinData.latitude ||
             !newBinData.longitude ||
             !newBinData.address ||
             !newBinData.heigth ||
-            !newBinData.weight ||
+            !newBinData.length ||
+            !newBinData.width ||
             !newBinData.maxWeight ||
+            !newBinData.color ||
+            !newBinData.material ||
+            !newBinData.brand ||
             !newBinData.areaId
         ) {
             return res.status(400).json({
@@ -122,16 +128,21 @@ const updateBinById = async (req, res) => {
                 resMessage: 'Missing input value(s).'
             });
         }
-        await Bin.update(
+        await ADM_Bin.update(
             {
                 latitude: newBinData.latitude,
                 longitude: newBinData.longitude,
                 address: newBinData.address,
                 heigth: newBinData.heigth,
-                weight: newBinData.weight,
+                length: newBinData.length,
+                width: newBinData.width,
                 maxWeight: newBinData.maxWeight,
+                color: newBinData.color,
+                material: newBinData.material,
+                brand: newBinData.brand,
                 image: newBinData.image,
-                status: newBinData.status,
+                description: newBinData.description,
+                status: 'empty',
                 areaId: newBinData.areaId
             },
             {
@@ -141,13 +152,12 @@ const updateBinById = async (req, res) => {
                 raw: true
             }
         );
-        let resData = await Bin.findOne({
+        let resData = await ADM_Bin.findOne({
             where: {
                 id: req.params.binId
             },
             raw: true
         });
-        delete resData.password;
         return res.status(200).json({
             resCode: 200,
             resMessage: 'OK',
@@ -163,13 +173,21 @@ const updateBinById = async (req, res) => {
 // Read
 const getAllBin = async (req, res) => {
     try {
-        let bins = await Bin.findAll({
+        let bins = await ADM_Bin.findAll({
             raw: true
         });
         if (!bins) {
             return res.status(404).json({
                 resCode: 404,
-                resMessage: 'Bin not found.'
+                resMessage: 'ADM_Bin not found.'
+            });
+        }
+        for (let i = 0; i < bins.length; i++) {
+            bins[i].area = await ADM_Area.findOne({
+                where: {
+                    id: bins[i].areaId
+                },
+                raw: true
             });
         }
         return res.status(200).json({
@@ -186,7 +204,7 @@ const getAllBin = async (req, res) => {
 };
 const getBinById = async (req, res) => {
     try {
-        let bin = await Bin.findOne({
+        let bin = await ADM_Bin.findOne({
             where: {
                 id: req.params.binId
             },
@@ -195,72 +213,19 @@ const getBinById = async (req, res) => {
         if (!bin) {
             return res.status(404).json({
                 resCode: 404,
-                resMessage: 'Bin not found.'
+                resMessage: 'ADM_Bin not found.'
             });
         }
+        bin.area = await ADM_Area.findOne({
+            where: {
+                id: bin.areaId
+            },
+            raw: true
+        });
         return res.status(200).json({
             resCode: 200,
             resMessage: 'OK',
             data: bin
-        });
-    } catch (err) {
-        return res.status(500).json({
-            resCode: 500,
-            resMessage: err
-        });
-    }
-};
-const getAllBinByAreaId = async (req, res) => {
-    try {
-        let bins = await Bin.findAll({
-            where: {
-                areaId: req.params.areaId
-            },
-            raw: true
-        });
-        if (!bins) {
-            return res.status(404).json({
-                resCode: 404,
-                resMessage: 'Bin not found.'
-            });
-        }
-        return res.status(200).json({
-            resCode: 200,
-            resMessage: 'OK',
-            data: bins
-        });
-    } catch (err) {
-        return res.status(500).json({
-            resCode: 500,
-            resMessage: err
-        });
-    }
-};
-const getAllBinByVehicleId = async (req, res) => {
-    try {
-        let area = await Task.findOne({
-            where: {
-                vehicleId: req.params.vehicleId
-            },
-            raw: true
-        });
-        console.log(area);
-        let bins = await Bin.findAll({
-            where: {
-                areaId: area.id
-            },
-            raw: true
-        });
-        if (!bins) {
-            return res.status(404).json({
-                resCode: 404,
-                resMessage: 'Bin not found.'
-            });
-        }
-        return res.status(200).json({
-            resCode: 200,
-            resMessage: 'OK',
-            data: bins
         });
     } catch (err) {
         return res.status(500).json({
@@ -275,7 +240,5 @@ module.exports = {
     deleteBinById,
     updateBinById,
     getAllBin,
-    getBinById,
-    getAllBinByAreaId,
-    getAllBinByVehicleId
+    getBinById
 };

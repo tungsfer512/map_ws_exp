@@ -192,7 +192,7 @@ const ADM_Bin = sequelize.define(
                 key: 'id'
             },
             onUpdate: 'CASCADE',
-            onDelete: 'CASCADE'
+            onDelete: 'SET NULL'
         }
     },
     {
@@ -216,7 +216,7 @@ const ADM_Task = sequelize.define(
                 key: 'id'
             },
             onUpdate: 'CASCADE',
-            onDelete: 'CASCADE'
+            onDelete: 'SET NULL'
         },
         vehicleId: {
             type: DataTypes.INTEGER,
@@ -225,7 +225,7 @@ const ADM_Task = sequelize.define(
                 key: 'id'
             },
             onUpdate: 'CASCADE',
-            onDelete: 'CASCADE'
+            onDelete: 'SET NULL'
         },
         areaId: {
             type: DataTypes.INTEGER,
@@ -234,7 +234,7 @@ const ADM_Task = sequelize.define(
                 key: 'id'
             },
             onUpdate: 'CASCADE',
-            onDelete: 'CASCADE'
+            onDelete: 'SET NULL'
         },
         description: {
             type: DataTypes.TEXT
@@ -277,7 +277,9 @@ const LOG_Bin_State = sequelize.define(
             references: {
                 model: 'ADM_Bin',
                 key: 'id'
-            }
+            },
+            onUpdate: 'CASCADE',
+            onDelete: 'SET NULL'
         }
     },
     {
@@ -329,21 +331,27 @@ const LOG_Vehicle_Work = sequelize.define(
             references: {
                 model: 'ADM_Vehicle',
                 key: 'id'
-            }
+            },
+            onUpdate: 'CASCADE',
+            onDelete: 'SET NULL'
         },
         driverId: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'ADM_User',
                 key: 'id'
-            }
+            },
+            onUpdate: 'CASCADE',
+            onDelete: 'SET NULL'
         },
         binStateId: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'LOG_Bin_State',
                 key: 'id'
-            }
+            },
+            onUpdate: 'CASCADE',
+            onDelete: 'SET NULL'
         }
     },
     {
@@ -389,14 +397,18 @@ const SUP_Vehicle_State = sequelize.define(
             references: {
                 model: 'ADM_Vehicle',
                 key: 'id'
-            }
+            },
+            onUpdate: 'CASCADE',
+            onDelete: 'SET NULL'
         },
         driverId: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'ADM_User',
                 key: 'id'
-            }
+            },
+            onUpdate: 'CASCADE',
+            onDelete: 'SET NULL'
         }
     },
     {
@@ -424,7 +436,9 @@ const SUP_Vehicle_Position = sequelize.define(
             references: {
                 model: 'ADM_Vehicle',
                 key: 'id'
-            }
+            },
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE'
         }
     },
     {
@@ -473,14 +487,18 @@ const SUP_Vehicle_Trouble = sequelize.define(
             references: {
                 model: 'ADM_Vehicle',
                 key: 'id'
-            }
+            },
+            onUpdate: 'CASCADE',
+            onDelete: 'SET NULL'
         },
         driverId: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'ADM_User',
                 key: 'id'
-            }
+            },
+            onUpdate: 'CASCADE',
+            onDelete: 'SET NULL'
         }
     },
     {

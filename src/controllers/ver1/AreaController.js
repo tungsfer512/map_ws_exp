@@ -1,15 +1,10 @@
-const { Area } = require('../../models/ver1/models');
+const { ADM_Area, ADM_Bin } = require('../../models/ver1/models');
 // Create
 const addNewArea = async (req, res) => {
     try {
         let newAreaData = req.body;
-        if (!newAreaData.description) {
-            return res.status(400).json({
-                resCode: 400,
-                resMessage: 'Missing input value(s).'
-            });
-        }
-        let newArea = new Area({
+        let newArea = new ADM_Area({
+            acreage: newAreaData.acreage,
             description: newAreaData.description,
             status: newAreaData.status
         });
@@ -30,7 +25,7 @@ const addNewArea = async (req, res) => {
 // Delete
 const deleteAreaById = async (req, res) => {
     try {
-        let area = await Area.findOne({
+        let area = await ADM_Area.findOne({
             where: {
                 id: req.params.areaId
             },
@@ -42,7 +37,7 @@ const deleteAreaById = async (req, res) => {
                 resMessage: 'Area not found.'
             });
         }
-        await Area.destroy({
+        await ADM_Area.destroy({
             where: {
                 id: req.params.areaId
             },
@@ -50,8 +45,7 @@ const deleteAreaById = async (req, res) => {
         });
         return res.status(200).json({
             resCode: 200,
-            resMessage: 'OK',
-            data: area
+            resMessage: 'OK'
         });
     } catch (err) {
         res.status(500).json({
@@ -63,7 +57,7 @@ const deleteAreaById = async (req, res) => {
 // Update
 const updateAreaById = async (req, res) => {
     try {
-        let area = await Area.findOne({
+        let area = await ADM_Area.findOne({
             where: {
                 id: req.params.areaId
             },
@@ -76,14 +70,9 @@ const updateAreaById = async (req, res) => {
             });
         }
         let newAreaData = req.body;
-        if (!newAreaData.description) {
-            return res.status(400).json({
-                resCode: 400,
-                resMessage: 'Missing input value(s).'
-            });
-        }
-        await Area.update(
+        await ADM_Area.update(
             {
+                acreage: newAreaData.acreage,
                 description: newAreaData.description,
                 status: newAreaData.status
             },
@@ -94,7 +83,7 @@ const updateAreaById = async (req, res) => {
                 raw: true
             }
         );
-        let resData = await Area.findOne({
+        let resData = await ADM_Area.findOne({
             where: {
                 id: req.params.areaId
             },
@@ -115,13 +104,21 @@ const updateAreaById = async (req, res) => {
 // Read
 const getAllArea = async (req, res) => {
     try {
-        let areas = await Area.findAll({
+        let areas = await ADM_Area.findAll({
             raw: true
         });
         if (!areas) {
             return res.status(404).json({
                 resCode: 404,
                 resMessage: 'Area not found.'
+            });
+        }
+        for (let i = 0; i < areas.length; i++) {
+            areas[i].bins = await ADM_Bin.findAll({
+                where: {
+                    areaId: areas[i].id
+                },
+                raw: true
             });
         }
         return res.status(200).json({
@@ -138,22 +135,28 @@ const getAllArea = async (req, res) => {
 };
 const getAreaById = async (req, res) => {
     try {
-        let areas = await Area.findOne({
+        let area = await ADM_Area.findOne({
             where: {
                 id: req.params.areaId
             },
             raw: true
         });
-        if (!areas) {
+        if (!area) {
             return res.status(404).json({
                 resCode: 404,
                 resMessage: 'Area not found.'
             });
         }
+        area.bins = await ADM_Bin.findAll({
+            where: {
+                areaId: area.id
+            },
+            raw: true
+        });
         return res.status(200).json({
             resCode: 200,
             resMessage: 'OK',
-            data: areas
+            data: area
         });
     } catch (err) {
         return res.status(500).json({
