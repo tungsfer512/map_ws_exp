@@ -1,4 +1,4 @@
-const { ADM_User, ADM_Area, ADM_Task, ADM_Bin, ADM_Vehicle } = require('../../models/ver1/models');
+const { ADM_User, ADM_Area, ADM_Task, ADM_Bin, ADM_Vehicle, SUP_Vehicle_Position } = require('../../models/ver1/models');
 const bcrypt = require('bcrypt');
 const uploadFile = require('../uploadFileMiddleware');
 
@@ -257,6 +257,14 @@ const getDriverById = async (req, res) => {
             },
             raw: true
         })
+        let vehiclePosition = await SUP_Vehicle_Position.findOne({
+            where: {
+                vehicleId: vehicle.id
+            },
+            raw: true
+        });
+        vehicle.latitude = vehiclePosition.latitude;
+        vehicle.longitude = vehiclePosition.longitude;
         let resData = {
             ...driver,
             area: area,
