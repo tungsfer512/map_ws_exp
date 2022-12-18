@@ -106,47 +106,51 @@ const login = async (req, res) => {
                 expiresIn: '365d'
             }
         );
+        let resData = {
+            ...userData,
+            accessToken: accessToken,
+        };
         let task = await ADM_Task.findOne({
             where: {
-                driverId: userData.id, 
+                driverId: userData.id,
                 status: 'on'
-            }, 
-            raw: true
-        });
-        let area = await ADM_Area.findOne({
-            where: {
-                id: task.areaId
-            }, 
-            raw: true
-        })
-        let bins = await ADM_Bin.findAll({
-            where: {
-                areaId: task.areaId
-            }, 
-            raw: true
-        })
-        let vehicle = await ADM_Vehicle.findOne({
-            where: {
-                id: task.vehicleId
-            }, 
-            raw: true
-        })
-        let vehiclePosition = await SUP_Vehicle_Position.findOne({
-            where: {
-                vehicleId: vehicle.id
             },
             raw: true
         });
-        vehicle.latitude = vehiclePosition.latitude;
-        vehicle.longitude = vehiclePosition.longitude;
-        let resData = {
-            ...userData,
-            accessToken: accessToken, 
-            area: area, 
-            bins: bins, 
-            vehicle: vehicle
-        };
-
+        if (task) {
+            let area = await ADM_Area.findOne({
+                where: {
+                    id: task.areaId
+                },
+                raw: true
+            })
+            let bins = await ADM_Bin.findAll({
+                where: {
+                    areaId: task.areaId
+                },
+                raw: true
+            })
+            let vehicle = await ADM_Vehicle.findOne({
+                where: {
+                    id: task.vehicleId
+                },
+                raw: true
+            })
+            if (vehicle) {
+                let vehiclePosition = await SUP_Vehicle_Position.findOne({
+                    where: {
+                        vehicleId: vehicle.id
+                    },
+                    raw: true
+                });
+                vehicle.latitude = vehiclePosition.latitude;
+                vehicle.longitude = vehiclePosition.longitude;
+            }
+            resData.area = area;
+            resData.bins = bins;
+            resData.vehicle = vehicle;
+        }
+        
         return res.status(200).json({
             resCode: 200,
             resMessage: 'OK',
