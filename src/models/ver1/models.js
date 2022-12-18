@@ -13,7 +13,7 @@ const sequelize = new Sequelize(
 );
 
 const ADM_Vehicle = sequelize.define(
-    'ADM_Vehicle',
+    'adm_vehicle',
     {
         id: {
             type: DataTypes.INTEGER,
@@ -61,13 +61,13 @@ const ADM_Vehicle = sequelize.define(
         }
     },
     {
-        tableName: 'ADM_Vehicle',
+        tableName: 'adm_vehicle',
         timestamps: true
     }
 );
 
 const ADM_User = sequelize.define(
-    'ADM_User',
+    'adm_user',
     {
         id: {
             type: DataTypes.INTEGER,
@@ -109,13 +109,13 @@ const ADM_User = sequelize.define(
         }
     },
     {
-        tableName: 'ADM_User',
+        tableName: 'adm_user',
         timestamps: true
     }
 );
 
 const ADM_Area = sequelize.define(
-    'ADM_Area',
+    'adm_area',
     {
         id: {
             type: DataTypes.INTEGER,
@@ -133,13 +133,13 @@ const ADM_Area = sequelize.define(
         }
     },
     {
-        tableName: 'ADM_Area',
+        tableName: 'adm_area',
         timestamps: true
     }
 );
 
 const ADM_Bin = sequelize.define(
-    'ADM_Bin',
+    'adm_bin',
     {
         id: {
             type: DataTypes.INTEGER,
@@ -188,7 +188,7 @@ const ADM_Bin = sequelize.define(
         areaId: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'ADM_Area',
+                model: 'adm_area',
                 key: 'id'
             },
             onUpdate: 'CASCADE',
@@ -196,13 +196,13 @@ const ADM_Bin = sequelize.define(
         }
     },
     {
-        tableName: 'ADM_Bin',
+        tableName: 'adm_bin',
         timestamps: true
     }
 );
 
 const ADM_Task = sequelize.define(
-    'ADM_Task',
+    'adm_task',
     {
         id: {
             type: DataTypes.INTEGER,
@@ -212,7 +212,7 @@ const ADM_Task = sequelize.define(
         driverId: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'ADM_User',
+                model: 'adm_user',
                 key: 'id'
             },
             onUpdate: 'CASCADE',
@@ -221,7 +221,7 @@ const ADM_Task = sequelize.define(
         vehicleId: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'ADM_Vehicle',
+                model: 'adm_vehicle',
                 key: 'id'
             },
             onUpdate: 'CASCADE',
@@ -230,7 +230,7 @@ const ADM_Task = sequelize.define(
         areaId: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'ADM_Area',
+                model: 'adm_area',
                 key: 'id'
             },
             onUpdate: 'CASCADE',
@@ -244,13 +244,13 @@ const ADM_Task = sequelize.define(
         }
     },
     {
-        tableName: 'ADM_Task',
+        tableName: 'adm_task',
         timestamps: true
     }
 );
 
 const LOG_Bin_State = sequelize.define(
-    'LOG_Bin_State',
+    'log_bin_state',
     {
         id: {
             type: DataTypes.INTEGER,
@@ -275,7 +275,7 @@ const LOG_Bin_State = sequelize.define(
         binId: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'ADM_Bin',
+                model: 'adm_bin',
                 key: 'id'
             },
             onUpdate: 'CASCADE',
@@ -283,13 +283,13 @@ const LOG_Bin_State = sequelize.define(
         }
     },
     {
-        tableName: 'LOG_Bin_State',
+        tableName: 'log_bin_state',
         timestamps: true
     }
 );
 
 const LOG_Vehicle_Work = sequelize.define(
-    'LOG_Vehicle_Work',
+    'log_vehicle_work',
     {
         id: {
             type: DataTypes.INTEGER,
@@ -329,7 +329,7 @@ const LOG_Vehicle_Work = sequelize.define(
         vehicleId: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'ADM_Vehicle',
+                model: 'adm_vehicle',
                 key: 'id'
             },
             onUpdate: 'CASCADE',
@@ -338,7 +338,7 @@ const LOG_Vehicle_Work = sequelize.define(
         driverId: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'ADM_User',
+                model: 'adm_user',
                 key: 'id'
             },
             onUpdate: 'CASCADE',
@@ -347,7 +347,7 @@ const LOG_Vehicle_Work = sequelize.define(
         binStateId: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'LOG_Bin_State',
+                model: 'log_bin_state',
                 key: 'id'
             },
             onUpdate: 'CASCADE',
@@ -355,13 +355,13 @@ const LOG_Vehicle_Work = sequelize.define(
         }
     },
     {
-        tableName: 'LOG_Vehicle_Work',
+        tableName: 'log_vehicle_work',
         timestamps: true
     }
 );
 
 const SUP_Vehicle_State = sequelize.define(
-    'SUP_Vehicle_State',
+    'sup_vehicle_state',
     {
         id: {
             type: DataTypes.INTEGER,
@@ -395,7 +395,7 @@ const SUP_Vehicle_State = sequelize.define(
         vehicleId: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'ADM_Vehicle',
+                model: 'adm_vehicle',
                 key: 'id'
             },
             onUpdate: 'CASCADE',
@@ -404,7 +404,7 @@ const SUP_Vehicle_State = sequelize.define(
         driverId: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'ADM_User',
+                model: 'adm_user',
                 key: 'id'
             },
             onUpdate: 'CASCADE',
@@ -412,13 +412,13 @@ const SUP_Vehicle_State = sequelize.define(
         }
     },
     {
-        tableName: 'SUP_Vehicle_State',
+        tableName: 'sup_vehicle_state',
         timestamps: true
     }
 );
 
 const SUP_Vehicle_Position = sequelize.define(
-    'SUP_Vehicle_Position',
+    'sup_vehicle_position',
     {
         id: {
             type: DataTypes.INTEGER,
@@ -434,7 +434,7 @@ const SUP_Vehicle_Position = sequelize.define(
         vehicleId: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'ADM_Vehicle',
+                model: 'adm_vehicle',
                 key: 'id'
             },
             onUpdate: 'CASCADE',
@@ -442,13 +442,13 @@ const SUP_Vehicle_Position = sequelize.define(
         }
     },
     {
-        tableName: 'SUP_Vehicle_Position',
+        tableName: 'sup_vehicle_position',
         timestamps: true
     }
 );
 
 const SUP_Vehicle_Trouble = sequelize.define(
-    'SUP_Vehicle_Trouble',
+    'sup_vehicle_trouble',
     {
         id: {
             type: DataTypes.INTEGER,
@@ -485,7 +485,7 @@ const SUP_Vehicle_Trouble = sequelize.define(
         vehicleId: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'ADM_Vehicle',
+                model: 'adm_vehicle',
                 key: 'id'
             },
             onUpdate: 'CASCADE',
@@ -494,7 +494,7 @@ const SUP_Vehicle_Trouble = sequelize.define(
         driverId: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'ADM_User',
+                model: 'adm_user',
                 key: 'id'
             },
             onUpdate: 'CASCADE',
@@ -502,7 +502,7 @@ const SUP_Vehicle_Trouble = sequelize.define(
         }
     },
     {
-        tableName: 'SUP_Vehicle_Trouble',
+        tableName: 'sup_vehicle_trouble',
         timestamps: true
     }
 );
