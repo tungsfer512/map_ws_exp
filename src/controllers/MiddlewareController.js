@@ -48,7 +48,7 @@ const verify_Token_Manager_Admin = (req, res, next) => {
 };
 const verify_Token_UserId_Admin = (req, res, next) => {
     verify_Token(req, res, () => {
-        if (req.user.id === req.params.userId || req.user.role === 'admin') {
+        if (req.user.id == req.params.userId || req.user.role === 'admin') {
             next();
         } else {
             return res.status(403).json({
@@ -61,7 +61,7 @@ const verify_Token_UserId_Admin = (req, res, next) => {
 const verify_Token_UserId_Manager_Admin = (req, res, next) => {
     verify_Token(req, res, () => {
         if (
-            req.user.id === req.params.userId ||
+            req.user.id == req.params.userId ||
             req.user.role === 'admin' ||
             req.user.role === 'manager'
         ) {
