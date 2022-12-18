@@ -5,9 +5,9 @@
     "main": "server.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "nodemon --inspect --exec babel-node src/server.js",
+        "start": "node src/server.js",
         "format": "prettier --single-quote --trailing-comma none --tab-width 4 --write \"**/**/*.{js,json}\"",
-        "dev": "npm run format && npm start",
+        "dev": "nodemon --inspect --exec babel-node src/server.js",
         "setupdb": "node src/config/setupDB.js"
     },
     "lint-staged": {
