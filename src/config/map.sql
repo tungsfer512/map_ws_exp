@@ -2,7 +2,7 @@
 -- Host:                         127.0.0.1
 -- Server version:               8.0.31 - MySQL Community Server - GPL
 -- Server OS:                    Win64
--- HeidiSQL Version:             12.3.0.6589
+-- HeidiSQL Version:             12.1.0.6537
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -16,12 +16,10 @@
 
 
 -- Dumping database structure for map_ws_dev
-DROP DATABASE IF EXISTS `map_ws_dev`;
 CREATE DATABASE IF NOT EXISTS `map_ws_dev` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `map_ws_dev`;
 
 -- Dumping structure for table map_ws_dev.adm_area
-DROP TABLE IF EXISTS `adm_area`;
 CREATE TABLE IF NOT EXISTS `adm_area` (
   `id` int NOT NULL AUTO_INCREMENT,
   `acreage` double DEFAULT NULL,
@@ -32,8 +30,8 @@ CREATE TABLE IF NOT EXISTS `adm_area` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table map_ws_dev.adm_area: ~0 rows (approximately)
-REPLACE INTO `adm_area` (`id`, `acreage`, `description`, `status`, `createdAt`, `updatedAt`) VALUES
+-- Dumping data for table map_ws_dev.adm_area: ~5 rows (approximately)
+INSERT INTO `adm_area` (`id`, `acreage`, `description`, `status`, `createdAt`, `updatedAt`) VALUES
 	(1, 142248, 'Khu vuc 1', 'on', '2022-12-17 14:32:11', '2022-12-17 14:32:11'),
 	(2, 122865, 'Khu vuc 2', 'on', '2022-12-17 14:35:27', '2022-12-17 14:35:27'),
 	(3, 675461, 'Khu vuc 3', 'on', '2022-12-17 14:36:12', '2022-12-17 14:36:12'),
@@ -41,7 +39,6 @@ REPLACE INTO `adm_area` (`id`, `acreage`, `description`, `status`, `createdAt`, 
 	(5, 108806, 'Khu vuc 5', 'on', '2022-12-17 14:36:18', '2022-12-17 14:36:18');
 
 -- Dumping structure for table map_ws_dev.adm_bin
-DROP TABLE IF EXISTS `adm_bin`;
 CREATE TABLE IF NOT EXISTS `adm_bin` (
   `id` int NOT NULL AUTO_INCREMENT,
   `latitude` double DEFAULT NULL,
@@ -66,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `adm_bin` (
 ) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table map_ws_dev.adm_bin: ~48 rows (approximately)
-REPLACE INTO `adm_bin` (`id`, `latitude`, `longitude`, `address`, `height`, `length`, `width`, `maxWeight`, `color`, `material`, `brand`, `image`, `description`, `status`, `areaId`, `createdAt`, `updatedAt`) VALUES
+INSERT INTO `adm_bin` (`id`, `latitude`, `longitude`, `address`, `height`, `length`, `width`, `maxWeight`, `color`, `material`, `brand`, `image`, `description`, `status`, `areaId`, `createdAt`, `updatedAt`) VALUES
 	(1, 21.023301, 105.842583, '2 Ng. Tức Mặc, Cửa Nam, Hoàn Kiếm, Hà Nội, Vietnam', 122, 135, 78, 100, 'blue', 'HDPE, Composite', 'Paloca', 'bin_1671295449239.jpg', '', 'empty', 1, '2022-12-17 16:44:09', '2022-12-17 16:44:09'),
 	(2, 21.024804, 105.842959, '45-27 Phan Bội Châu, Cửa Nam, Hoàn Kiếm, Hà Nội, Vietnam', 122, 135, 78, 100, 'blue', 'HDPE, Composite', 'Paloca', 'bin_1671295449271.jpg', '', 'empty', 1, '2022-12-17 16:44:09', '2022-12-17 16:44:09'),
 	(3, 21.026677, 105.84357, '14-16 Phan Bội Châu, Cửa Nam, Hoàn Kiếm, Hà Nội, Vietnam', 122, 135, 78, 100, 'blue', 'HDPE, Composite', 'Paloca', 'bin_1671295449293.jpg', '', 'empty', 1, '2022-12-17 16:44:09', '2022-12-17 16:44:09'),
@@ -117,7 +114,6 @@ REPLACE INTO `adm_bin` (`id`, `latitude`, `longitude`, `address`, `height`, `len
 	(48, 21.025727, 105.855275, '15 P. Ngô Quyền, Tràng Tiền, Hoàn Kiếm, Hà Nội, Vietnam', 122, 135, 78, 100, 'blue', 'HDPE, Composite', 'Paloca', 'bin_1671295450646.jpg', '', 'empty', 5, '2022-12-17 16:44:10', '2022-12-17 16:44:10');
 
 -- Dumping structure for table map_ws_dev.adm_task
-DROP TABLE IF EXISTS `adm_task`;
 CREATE TABLE IF NOT EXISTS `adm_task` (
   `id` int NOT NULL AUTO_INCREMENT,
   `driverId` int DEFAULT NULL,
@@ -136,8 +132,8 @@ CREATE TABLE IF NOT EXISTS `adm_task` (
   CONSTRAINT `adm_task_ibfk_3` FOREIGN KEY (`areaId`) REFERENCES `adm_area` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table map_ws_dev.adm_task: ~0 rows (approximately)
-REPLACE INTO `adm_task` (`id`, `driverId`, `vehicleId`, `areaId`, `description`, `status`, `createdAt`, `updatedAt`) VALUES
+-- Dumping data for table map_ws_dev.adm_task: ~10 rows (approximately)
+INSERT INTO `adm_task` (`id`, `driverId`, `vehicleId`, `areaId`, `description`, `status`, `createdAt`, `updatedAt`) VALUES
 	(1, 1, 1, 1, NULL, 'finished', '2022-12-17 15:21:05', '2022-12-17 15:21:05'),
 	(2, 4, 2, 2, NULL, 'finished', '2022-12-17 15:21:29', '2022-12-17 15:21:29'),
 	(3, 5, 3, 3, NULL, 'finished', '2022-12-17 15:21:38', '2022-12-17 15:21:38'),
@@ -150,7 +146,6 @@ REPLACE INTO `adm_task` (`id`, `driverId`, `vehicleId`, `areaId`, `description`,
 	(10, 7, 5, 4, NULL, 'on', '2022-12-17 15:23:51', '2022-12-17 15:23:51');
 
 -- Dumping structure for table map_ws_dev.adm_user
-DROP TABLE IF EXISTS `adm_user`;
 CREATE TABLE IF NOT EXISTS `adm_user` (
   `id` int NOT NULL AUTO_INCREMENT,
   `phone` text,
@@ -169,8 +164,8 @@ CREATE TABLE IF NOT EXISTS `adm_user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table map_ws_dev.adm_user: ~0 rows (approximately)
-REPLACE INTO `adm_user` (`id`, `phone`, `password`, `email`, `firstName`, `lastName`, `gender`, `dob`, `image`, `role`, `description`, `status`, `createdAt`, `updatedAt`) VALUES
+-- Dumping data for table map_ws_dev.adm_user: ~7 rows (approximately)
+INSERT INTO `adm_user` (`id`, `phone`, `password`, `email`, `firstName`, `lastName`, `gender`, `dob`, `image`, `role`, `description`, `status`, `createdAt`, `updatedAt`) VALUES
 	(1, '0986420512', '$2b$10$vGJ/OfKbNy.AHzKL/4KKWuaQajmlR9yENcyQevoeqgZ9L9KTa.r12', 'tungbv@gmail.com', 'Bui Van', 'Tung', 'male', '05/12/2001', 'user_1671284960657.png', 'driver', 'Bui Van Tung', 'on', '2022-12-17 13:49:20', '2022-12-17 13:49:20'),
 	(2, '0123456789', '$2b$10$5xFgtYqWXvEH6Ge4LPqQu.fQInRS7X/EWC.kYyV7g7LvrmJWx74YW', 'hungdn@gmail.com', 'Dang Ngoc', 'Hung', 'male', '01/01/1980', 'user_1671285089102.jpg', 'manager', 'Dang Ngoc Hung', 'on', '2022-12-17 13:51:29', '2022-12-17 13:51:29'),
 	(3, '0123456780', '$2b$10$IHaTj61UTANTbp7gX8rlkuwc7bzVwby777LvcTOPNmq9hUFUoa8uK', 'namvh@gmail.com', 'Vu Hoai', 'Nam', 'male', '02/03/1980', 'user_1671285138165.png', 'admin', 'Vu Hoai Nam', 'on', '2022-12-17 13:52:18', '2022-12-17 13:52:18'),
@@ -180,7 +175,6 @@ REPLACE INTO `adm_user` (`id`, `phone`, `password`, `email`, `firstName`, `lastN
 	(7, '0123456784', '$2b$10$8BfbH8/EymCt5Bvuzprg6ewlwfNRu1yJl/XTZG.5iBlvqZWaP1XYy', 'tiennv@gmail.com', 'Nguyen Van', 'Tien', 'male', '15/08/1995', 'user_1671285535190.png', 'driver', 'Nguyen Van Tien', 'on', '2022-12-17 13:58:55', '2022-12-17 13:58:55');
 
 -- Dumping structure for table map_ws_dev.adm_vehicle
-DROP TABLE IF EXISTS `adm_vehicle`;
 CREATE TABLE IF NOT EXISTS `adm_vehicle` (
   `id` int NOT NULL AUTO_INCREMENT,
   `engineHours` text,
@@ -201,16 +195,15 @@ CREATE TABLE IF NOT EXISTS `adm_vehicle` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table map_ws_dev.adm_vehicle: ~0 rows (approximately)
-REPLACE INTO `adm_vehicle` (`id`, `engineHours`, `engineId`, `engineType`, `model`, `height`, `length`, `width`, `odometer`, `plate`, `tonnage`, `image`, `description`, `status`, `createdAt`, `updatedAt`) VALUES
-	(1, '1082730', 'edaHFt4ZTu', 'Petrol', 'The Mammoth from New Way', 2800, 7270, 2555, 324393, '30E-96169', 12550, 'vehicle_1671289194156.jpg', '', 'off', '2022-12-17 14:59:54', '2022-12-17 14:59:54'),
+-- Dumping data for table map_ws_dev.adm_vehicle: ~5 rows (approximately)
+INSERT INTO `adm_vehicle` (`id`, `engineHours`, `engineId`, `engineType`, `model`, `height`, `length`, `width`, `odometer`, `plate`, `tonnage`, `image`, `description`, `status`, `createdAt`, `updatedAt`) VALUES
+	(1, '1082730', 'edaHFt4ZTu', 'Petrol', 'The Mammoth from New Way', 2800, 7270, 2555, 324393, '30E-96169', 12550, 'vehicle_1671289194156.jpg', '', 'breakdown', '2022-12-17 14:59:54', '2022-12-17 20:44:30'),
 	(2, '1010730', '6DaATgVNCA', 'Diesel', 'McNeilus Heavy-Duty Rear Loader', 2930, 5895, 2295, 123816, '30F-22222', 11712, 'vehicle_1671289331670.jpg', '', 'off', '2022-12-17 15:02:11', '2022-12-17 15:02:11'),
 	(3, '1190730', 'rWGUVnfA3E', 'Petrol', 'McNeilus Split Body', 3240, 7525, 2490, 867401, '30A-12893', 12532, 'vehicle_1671289422858.jpg', '', 'off', '2022-12-17 15:03:42', '2022-12-17 15:03:42'),
 	(4, '722730', 'jTYW2BU8JB', 'Petrol', 'Heil Powertrak Commercial Plus High Capacity Rear Loader', 3240, 9010, 2490, 984334, '64A-04075', 10471, 'vehicle_1671289494433.jpg', '', 'off', '2022-12-17 15:04:54', '2022-12-17 15:04:54'),
 	(5, '1622730', 'EPLytG2E9G', 'Diesel', 'Amrep HX450 Automated Side Loader', 3005, 5700, 2495, 475665, '30E-92292', 14800, 'vehicle_1671289547420.jpg', '', 'off', '2022-12-17 15:05:47', '2022-12-17 15:05:47');
 
 -- Dumping structure for table map_ws_dev.log_bin_state
-DROP TABLE IF EXISTS `log_bin_state`;
 CREATE TABLE IF NOT EXISTS `log_bin_state` (
   `id` int NOT NULL AUTO_INCREMENT,
   `latitude` double DEFAULT NULL,
@@ -229,7 +222,6 @@ CREATE TABLE IF NOT EXISTS `log_bin_state` (
 -- Dumping data for table map_ws_dev.log_bin_state: ~0 rows (approximately)
 
 -- Dumping structure for table map_ws_dev.log_vehicle_work
-DROP TABLE IF EXISTS `log_vehicle_work`;
 CREATE TABLE IF NOT EXISTS `log_vehicle_work` (
   `id` int NOT NULL AUTO_INCREMENT,
   `latitude` double DEFAULT NULL,
@@ -259,7 +251,6 @@ CREATE TABLE IF NOT EXISTS `log_vehicle_work` (
 -- Dumping data for table map_ws_dev.log_vehicle_work: ~0 rows (approximately)
 
 -- Dumping structure for table map_ws_dev.sup_vehicle_position
-DROP TABLE IF EXISTS `sup_vehicle_position`;
 CREATE TABLE IF NOT EXISTS `sup_vehicle_position` (
   `id` int NOT NULL AUTO_INCREMENT,
   `latitude` double DEFAULT NULL,
@@ -272,8 +263,8 @@ CREATE TABLE IF NOT EXISTS `sup_vehicle_position` (
   CONSTRAINT `sup_vehicle_position_ibfk_1` FOREIGN KEY (`vehicleId`) REFERENCES `adm_vehicle` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table map_ws_dev.sup_vehicle_position: ~0 rows (approximately)
-REPLACE INTO `sup_vehicle_position` (`id`, `latitude`, `longitude`, `vehicleId`, `createdAt`, `updatedAt`) VALUES
+-- Dumping data for table map_ws_dev.sup_vehicle_position: ~5 rows (approximately)
+INSERT INTO `sup_vehicle_position` (`id`, `latitude`, `longitude`, `vehicleId`, `createdAt`, `updatedAt`) VALUES
 	(1, 21.021474, 105.850632, 1, '2022-12-17 14:59:54', '2022-12-17 14:59:54'),
 	(2, 21.022259, 105.856313, 2, '2022-12-17 15:02:11', '2022-12-17 15:02:11'),
 	(3, 21.026153, 105.850895, 3, '2022-12-17 15:03:42', '2022-12-17 15:03:42'),
@@ -281,7 +272,6 @@ REPLACE INTO `sup_vehicle_position` (`id`, `latitude`, `longitude`, `vehicleId`,
 	(5, 21.026608, 105.844903, 5, '2022-12-17 15:05:47', '2022-12-17 15:05:47');
 
 -- Dumping structure for table map_ws_dev.sup_vehicle_state
-DROP TABLE IF EXISTS `sup_vehicle_state`;
 CREATE TABLE IF NOT EXISTS `sup_vehicle_state` (
   `id` int NOT NULL AUTO_INCREMENT,
   `latitude` double DEFAULT NULL,
@@ -306,7 +296,6 @@ CREATE TABLE IF NOT EXISTS `sup_vehicle_state` (
 -- Dumping data for table map_ws_dev.sup_vehicle_state: ~0 rows (approximately)
 
 -- Dumping structure for table map_ws_dev.sup_vehicle_trouble
-DROP TABLE IF EXISTS `sup_vehicle_trouble`;
 CREATE TABLE IF NOT EXISTS `sup_vehicle_trouble` (
   `id` int NOT NULL AUTO_INCREMENT,
   `latitude` double DEFAULT NULL,
@@ -327,9 +316,61 @@ CREATE TABLE IF NOT EXISTS `sup_vehicle_trouble` (
   KEY `driverId` (`driverId`),
   CONSTRAINT `sup_vehicle_trouble_ibfk_1` FOREIGN KEY (`vehicleId`) REFERENCES `adm_vehicle` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `sup_vehicle_trouble_ibfk_2` FOREIGN KEY (`driverId`) REFERENCES `adm_user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table map_ws_dev.sup_vehicle_trouble: ~0 rows (approximately)
+-- Dumping data for table map_ws_dev.sup_vehicle_trouble: ~51 rows (approximately)
+INSERT INTO `sup_vehicle_trouble` (`id`, `latitude`, `longitude`, `altitude`, `speed`, `angle`, `fuel`, `trouble`, `description`, `status`, `vehicleId`, `driverId`, `createdAt`, `updatedAt`) VALUES
+	(1, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 19:58:38', '2022-12-17 19:58:38'),
+	(2, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:05:02', '2022-12-17 20:05:02'),
+	(3, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:05:24', '2022-12-17 20:05:24'),
+	(4, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:05:26', '2022-12-17 20:05:26'),
+	(5, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:05:26', '2022-12-17 20:05:26'),
+	(6, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:05:39', '2022-12-17 20:05:39'),
+	(7, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:08:48', '2022-12-17 20:08:48'),
+	(8, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:09:28', '2022-12-17 20:09:28'),
+	(9, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:13:24', '2022-12-17 20:13:24'),
+	(10, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:14:03', '2022-12-17 20:14:03'),
+	(11, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:15:05', '2022-12-17 20:15:05'),
+	(12, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:16:14', '2022-12-17 20:16:14'),
+	(13, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:19:31', '2022-12-17 20:19:31'),
+	(14, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:19:37', '2022-12-17 20:19:37'),
+	(15, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:21:22', '2022-12-17 20:21:22'),
+	(16, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:23:36', '2022-12-17 20:23:36'),
+	(17, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:24:52', '2022-12-17 20:24:52'),
+	(18, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:25:06', '2022-12-17 20:25:06'),
+	(19, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:25:58', '2022-12-17 20:25:58'),
+	(20, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:26:28', '2022-12-17 20:26:28'),
+	(21, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:26:42', '2022-12-17 20:26:42'),
+	(22, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:27:03', '2022-12-17 20:27:03'),
+	(23, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:27:08', '2022-12-17 20:27:08'),
+	(24, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:27:11', '2022-12-17 20:27:11'),
+	(25, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:27:11', '2022-12-17 20:27:11'),
+	(26, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:27:38', '2022-12-17 20:27:38'),
+	(27, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:30:06', '2022-12-17 20:30:06'),
+	(28, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:30:20', '2022-12-17 20:30:20'),
+	(29, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:30:21', '2022-12-17 20:30:21'),
+	(30, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:30:53', '2022-12-17 20:30:53'),
+	(31, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:31:10', '2022-12-17 20:31:10'),
+	(32, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:32:07', '2022-12-17 20:32:07'),
+	(33, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:33:18', '2022-12-17 20:33:18'),
+	(34, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:35:36', '2022-12-17 20:35:36'),
+	(35, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:35:47', '2022-12-17 20:35:47'),
+	(36, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:36:27', '2022-12-17 20:36:27'),
+	(37, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:37:14', '2022-12-17 20:37:14'),
+	(38, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:44:03', '2022-12-17 20:44:03'),
+	(39, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:44:21', '2022-12-17 20:44:21'),
+	(40, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:44:28', '2022-12-17 20:44:28'),
+	(41, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:44:28', '2022-12-17 20:44:28'),
+	(42, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:44:28', '2022-12-17 20:44:28'),
+	(43, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:44:28', '2022-12-17 20:44:28'),
+	(44, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:44:28', '2022-12-17 20:44:28'),
+	(45, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:44:29', '2022-12-17 20:44:29'),
+	(46, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:44:29', '2022-12-17 20:44:29'),
+	(47, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:44:29', '2022-12-17 20:44:29'),
+	(48, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:44:29', '2022-12-17 20:44:29'),
+	(49, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:44:29', '2022-12-17 20:44:29'),
+	(50, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:44:29', '2022-12-17 20:44:29'),
+	(51, 21.021474, 105.850632, 123, 123, 90, 102, 'car puncture', 'car puncture', 'breakdown', 1, 1, '2022-12-17 20:44:30', '2022-12-17 20:44:30');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
