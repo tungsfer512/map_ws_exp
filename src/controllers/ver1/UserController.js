@@ -1,4 +1,4 @@
-const { ADM_User } = require('../../models/ver1/models');
+const { ADM_User, ADM_Area, ADM_Task, ADM_Bin, ADM_Vehicle } = require('../../models/ver1/models');
 const bcrypt = require('bcrypt');
 const uploadFile = require('../uploadFileMiddleware');
 
