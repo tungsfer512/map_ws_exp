@@ -26,6 +26,7 @@ const webSocketServices = (wss) => {
             console.log(id);
             if (id[0] == 'v') {
                 id = id.substr(id.length - 1);
+                // let arr = id.split("_");
                 vehicles[id] = ws;
             }
             if (id[0] == 'g') {
@@ -81,7 +82,7 @@ const webSocketServices = (wss) => {
                         vechicleID: gpsID
                     }).then(() => {
                         if (vehicle) {
-                            console.log('sending to vehicle');
+                            console.log('sending to vehicle ' + gpsID);
                             vehicle.send(JSON.stringify(update));
                         }
                         for (const [key, value] of Object.entries(admins)) {
@@ -100,7 +101,7 @@ const webSocketServices = (wss) => {
                     0,
                     messageArray['id'].length - 2
                 );
-                console.log(vehicle_break);
+                // console.log(vehicle_break);
 
                 if (vehicle_break == 'vehicle_break') {
                     let vehicleID = messageArray['id'].substr(
@@ -145,10 +146,11 @@ const webSocketServices = (wss) => {
                     0,
                     messageArray['id'].length - 2
                 );
-                if (bin == 'bin') {
-                    let binID = messageArray['id'].substr(
-                        messageArray['id'].length - 1
-                    );
+                let arr = messageArray['id'].split("_");
+                console.log(arr[0]);
+                console.log(arr[1]);
+                if (arr[0] == 'bin') {
+                    let binID = arr[1];
                     console.log('bin connection ' + binID);
                     // let bin_full = await Bin.findOne({
                     //     where: {
