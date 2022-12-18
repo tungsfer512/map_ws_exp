@@ -48,7 +48,7 @@ const addEvent_Vehicle_work = async (data) => {
 // add event to log_bin_State
 const addEvent_Bin_state = async (data) => {
     try {
-        const update_bin = await ADM_Bin.update(
+        await ADM_Bin.update(
             { status: data.status },
             { where: { id: data.binID }, raw: true }
         );
@@ -56,7 +56,7 @@ const addEvent_Bin_state = async (data) => {
             where: { id: data.binID },
             raw: true
         });
-        const log = await LOG_Bin_State.create(
+        const log = new LOG_Bin_State(
             {
                 latitude: bin.latitude,
                 longitude: bin.longitude,
@@ -67,11 +67,13 @@ const addEvent_Bin_state = async (data) => {
             },
             { raw: true }
         );
-        return log;
+        await log.save();
+        return {latitude:log.dataValues.latitude,longitude:log.dataValues.longitude,updatedAt:log.dataValues.updatedAt};
     } catch (err) {
         console.log(err);
     }
 };
+
 const updatePosition = async (data) => {
     try {
         const log = await SUP_Vehicle_Position.update(
@@ -90,11 +92,16 @@ const updatePosition = async (data) => {
     }
 };
 
-const addEvent_Vehicle_sate = async (data) => {
+const addEvent_Vehicle_state = async (data) => {
     try {
-        const log = await SUP_Vehicle_State.create({
-            latitude: data.latitude,
-            longitude: data.longitude,
+        const vehicle_position = await SUP_Vehicle_Position.findOne({
+            where: { vehicleId: data.vehicleID },
+            raw: true
+        });
+        const taskOfDriver = await ADM_Task.findOne({where: {vehicleId: data.vehicleID},raw: true});
+        const log = new SUP_Vehicle_State({
+            latitude: vehicle_position.latitude,
+            longitude: vehicle_position.longitude,
             altitude: data.altitude,
             speed: data.speed,
             angle: data.angle,
@@ -102,9 +109,10 @@ const addEvent_Vehicle_sate = async (data) => {
             description: data.description,
             status: data.status,
             vehicleId: data.vehicleID,
-            driverId: data.driverID
+            driverId: taskOfDriver.driverId
         });
-        return log;
+        await log.save();
+        return {updatedAt:log.dataValues.updatedAt,latitude:vehicle_position.latitude,longitude:vehicle_position.longitude};
     } catch (err) {
         console.log(err);
     }
@@ -144,10 +152,11 @@ const addEvent_Vehicle_trouble = async (data) => {
     }
 };
 
+
 module.exports = {
     addEvent_Vehicle_trouble,
     updatePosition,
     addEvent_Bin_state,
     addEvent_Vehicle_work,
-    addEvent_Vehicle_sate
+    addEvent_Vehicle_state
 };
