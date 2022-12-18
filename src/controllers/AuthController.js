@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const { ADM_User, ADM_Task, ADM_Vehicle, ADM_Bin, ADM_Area } = require('../models/ver1/models');
+const { ADM_User, ADM_Task, ADM_Vehicle, ADM_Bin, ADM_Area, SUP_Vehicle_Position } = require('../models/ver1/models');
 const uploadFile = require('./uploadFileMiddleware');
 
 const register = async (req, res) => {
@@ -131,6 +131,14 @@ const login = async (req, res) => {
             }, 
             raw: true
         })
+        let vehiclePosition = await SUP_Vehicle_Position.findOne({
+            where: {
+                vehicleId: vehicle.id
+            },
+            raw: true
+        });
+        vehicle.latitude = vehiclePosition.latitude;
+        vehicle.longitude = vehiclePosition.longitude;
         let resData = {
             ...userData,
             accessToken: accessToken, 
