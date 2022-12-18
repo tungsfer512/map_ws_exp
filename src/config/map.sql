@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `adm_bin` (
   `latitude` double DEFAULT NULL,
   `longitude` double DEFAULT NULL,
   `address` text,
-  `heigth` double DEFAULT NULL,
+  `height` double DEFAULT NULL,
   `length` double DEFAULT NULL,
   `width` double DEFAULT NULL,
   `maxWeight` double DEFAULT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `adm_bin` (
 ) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table map_ws_dev.adm_bin: ~48 rows (approximately)
-REPLACE INTO `adm_bin` (`id`, `latitude`, `longitude`, `address`, `heigth`, `length`, `width`, `maxWeight`, `color`, `material`, `brand`, `image`, `description`, `status`, `areaId`, `createdAt`, `updatedAt`) VALUES
+REPLACE INTO `adm_bin` (`id`, `latitude`, `longitude`, `address`, `height`, `length`, `width`, `maxWeight`, `color`, `material`, `brand`, `image`, `description`, `status`, `areaId`, `createdAt`, `updatedAt`) VALUES
 	(1, 21.023301, 105.842583, '2 Ng. Tức Mặc, Cửa Nam, Hoàn Kiếm, Hà Nội, Vietnam', 122, 135, 78, 100, 'blue', 'HDPE, Composite', 'Paloca', 'bin_1671295449239.jpg', '', 'empty', 1, '2022-12-17 16:44:09', '2022-12-17 16:44:09'),
 	(2, 21.024804, 105.842959, '45-27 Phan Bội Châu, Cửa Nam, Hoàn Kiếm, Hà Nội, Vietnam', 122, 135, 78, 100, 'blue', 'HDPE, Composite', 'Paloca', 'bin_1671295449271.jpg', '', 'empty', 1, '2022-12-17 16:44:09', '2022-12-17 16:44:09'),
 	(3, 21.026677, 105.84357, '14-16 Phan Bội Châu, Cửa Nam, Hoàn Kiếm, Hà Nội, Vietnam', 122, 135, 78, 100, 'blue', 'HDPE, Composite', 'Paloca', 'bin_1671295449293.jpg', '', 'empty', 1, '2022-12-17 16:44:09', '2022-12-17 16:44:09'),

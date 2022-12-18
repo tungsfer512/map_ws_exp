@@ -155,7 +155,7 @@ const ADM_Bin = sequelize.define(
         address: {
             type: DataTypes.TEXT
         },
-        heigth: {
+        height: {
             type: DataTypes.DOUBLE
         },
         length: {
