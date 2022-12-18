@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const { ADM_User } = require('../models/ver1/models');
+const { ADM_User, ADM_Task, ADM_Vehicle, ADM_Bin, ADM_Area } = require('../models/ver1/models');
 const uploadFile = require('./uploadFileMiddleware');
 
 const register = async (req, res) => {
@@ -95,8 +95,7 @@ const login = async (req, res) => {
                 resMessage: 'Wrong password.'
             });
         }
-        let resData = userData;
-        delete resData.password;
+        delete userData.password;
         const accessToken = jwt.sign(
             {
                 id: userData.id,
@@ -107,13 +106,43 @@ const login = async (req, res) => {
                 expiresIn: '365d'
             }
         );
+        let task = await ADM_Task.findOne({
+            where: {
+                driverId: userData.id, 
+                status: 'on'
+            }, 
+            raw: true
+        });
+        let area = await ADM_Area.findOne({
+            where: {
+                id: task.areaId
+            }, 
+            raw: true
+        })
+        let bins = await ADM_Bin.findAll({
+            where: {
+                areaId: task.areaId
+            }, 
+            raw: true
+        })
+        let vehicle = await ADM_Vehicle.findOne({
+            where: {
+                id: task.vehicleId
+            }, 
+            raw: true
+        })
+        let resData = {
+            ...userData,
+            accessToken: accessToken, 
+            area: area, 
+            bins: bins, 
+            vehicle: vehicle
+        };
+
         return res.status(200).json({
             resCode: 200,
             resMessage: 'OK',
-            data: {
-                ...resData,
-                accessToken: accessToken
-            }
+            data: resData
         });
     } catch (err) {
         return res.status(500).json({

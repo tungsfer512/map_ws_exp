@@ -232,10 +232,41 @@ const getDriverById = async (req, res) => {
                 resMessage: 'ADM_User not found.'
             });
         }
+        let task = await ADM_Task.findOne({
+            where: {
+                driverId: driver.id,
+                status: 'on'
+            },
+            raw: true
+        });
+        let area = await ADM_Area.findOne({
+            where: {
+                id: task.areaId
+            },
+            raw: true
+        })
+        let bins = await ADM_Bin.findAll({
+            where: {
+                areaId: task.areaId
+            },
+            raw: true
+        })
+        let vehicle = await ADM_Vehicle.findOne({
+            where: {
+                id: task.vehicleId
+            },
+            raw: true
+        })
+        let resData = {
+            ...driver,
+            area: area,
+            bins: bins,
+            vehicle: vehicle
+        };
         return res.status(200).json({
             resCode: 200,
             resMessage: 'OK',
-            data: driver
+            data: resData
         });
     } catch (err) {
         return res.status(500).json({
