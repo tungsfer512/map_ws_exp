@@ -12,7 +12,7 @@ const addNewBin = async (req, res) => {
             !newBinData.latitude ||
             !newBinData.longitude ||
             !newBinData.address ||
-            !newBinData.heigth ||
+            !newBinData.height ||
             !newBinData.length ||
             !newBinData.width ||
             !newBinData.maxWeight ||
@@ -30,7 +30,7 @@ const addNewBin = async (req, res) => {
             latitude: newBinData.latitude,
             longitude: newBinData.longitude,
             address: newBinData.address,
-            heigth: newBinData.heigth,
+            height: newBinData.height,
             length: newBinData.length,
             width: newBinData.width,
             maxWeight: newBinData.maxWeight,
@@ -114,7 +114,7 @@ const updateBinById = async (req, res) => {
             !newBinData.latitude ||
             !newBinData.longitude ||
             !newBinData.address ||
-            !newBinData.heigth ||
+            !newBinData.height ||
             !newBinData.length ||
             !newBinData.width ||
             !newBinData.maxWeight ||
@@ -133,7 +133,7 @@ const updateBinById = async (req, res) => {
                 latitude: newBinData.latitude,
                 longitude: newBinData.longitude,
                 address: newBinData.address,
-                heigth: newBinData.heigth,
+                height: newBinData.height,
                 length: newBinData.length,
                 width: newBinData.width,
                 maxWeight: newBinData.maxWeight,
