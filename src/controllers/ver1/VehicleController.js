@@ -1,6 +1,8 @@
 const {
     ADM_Vehicle,
-    SUP_Vehicle_Position
+    SUP_Vehicle_Position,
+    ADM_Task,
+    ADM_User
 } = require('../../models/ver1/models');
 const uploadFile = require('../uploadFileMiddleware');
 
@@ -197,6 +199,19 @@ const getAllVehicle = async (req, res) => {
             });
             vehicles[i].latitude = vehiclePosition.latitude;
             vehicles[i].longitude = vehiclePosition.longitude;
+            let task = await ADM_Task.findOne({
+                where: {
+                    vehicleId: vehicles[i].id,
+                    status: 'on'
+                }, 
+                raw: true
+            });
+            vehicles[i].driver = await ADM_User.findOne({
+                where: {
+                    id: task.driverId
+                },
+                raw: true
+            });
         }
         return res.status(200).json({
             resCode: 200,
