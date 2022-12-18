@@ -7,7 +7,8 @@ const {
     updatePosition,
     addEvent_Bin_state,
     addEvent_Vehicle_work,
-    addEvent_Vehicle_state
+    addEvent_Vehicle_state,
+    check_Vehicle_area_bin
 } = require('./controllers/ver1/wss');
 
 const webSocketServices = (wss) => {
@@ -74,7 +75,6 @@ const webSocketServices = (wss) => {
                     //     }
                     // );
                     
-
                     updatePosition({
                         latitude: messageArray['lat'],
                         longitude: messageArray['long'],
@@ -100,9 +100,9 @@ const webSocketServices = (wss) => {
                     0,
                     messageArray['id'].length - 2
                 );
-                // console.log(vehicle);
+                console.log(vehicle_break);
 
-                if (vehicle_break == 'vehicle') {
+                if (vehicle_break == 'vehicle_break') {
                     let vehicleID = messageArray['id'].substr(
                         messageArray['id'].length - 1
                     );
@@ -195,6 +195,14 @@ const webSocketServices = (wss) => {
                             console.log('sending to admin');
                             value.send(JSON.stringify(update));
                         }
+                        check_Vehicle_area_bin({binID:binID}).then((res) =>{
+                            // console.log(res.vehicleID)
+                            let vehicle = vehicles[res.vehicleID]
+                            if(vehicle){
+                                console.log('sending to vehicle ' + res.vehicleID);
+                                vehicle.send(JSON.stringify(update));
+                            }
+                        })
                     })
                     
                 }
