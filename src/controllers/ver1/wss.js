@@ -7,7 +7,8 @@ const {
     SUP_Vehicle_Position,
     SUP_Vehicle_State,
     SUP_Vehicle_Trouble,
-    ADM_Task
+    ADM_Task,
+    ADM_Area
 } = require('../../models/ver1/models');
 
 const addEvent_Vehicle_work = async (data) => {
@@ -73,6 +74,14 @@ const addEvent_Bin_state = async (data) => {
         console.log(err);
     }
 };
+
+const check_Vehicle_area_bin = async (data) => {
+    const bin = await ADM_Bin.findOne({where:{id:data.binID},raw:true})
+    const area = await ADM_Area.findOne({where:{id:bin.areaId},raw:true})
+    const task = await ADM_Task.findOne({where:{areaId:area.id,status:'on'},raw:true})
+    return {vehicleID:task.vehicleId}
+}
+
 
 const updatePosition = async (data) => {
     try {
@@ -158,5 +167,6 @@ module.exports = {
     updatePosition,
     addEvent_Bin_state,
     addEvent_Vehicle_work,
-    addEvent_Vehicle_state
+    addEvent_Vehicle_state,
+    check_Vehicle_area_bin
 };
