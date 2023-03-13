@@ -20,6 +20,16 @@ vehicleRouter.delete(
     MiddlewareController.verify_Token_Manager_Admin,
     VehicleController.deleteVehicleById
 );
+vehicleRouter.post(
+    '/check',
+    MiddlewareController.verify_Token, 
+    VehicleController.checkVehicle
+)
+vehicleRouter.get(
+    '/validation',
+    MiddlewareController.verify_Token, 
+    VehicleController.getVehicleValidation
+)
 vehicleRouter.get(
     '/:vehicleId',
     MiddlewareController.verify_Token,

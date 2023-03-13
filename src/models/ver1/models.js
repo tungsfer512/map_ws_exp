@@ -58,6 +58,9 @@ const ADM_Vehicle = sequelize.define(
         },
         status: {
             type: DataTypes.TEXT
+        }, 
+        camera: {
+            type: DataTypes.TEXT
         }
     },
     {
@@ -185,6 +188,15 @@ const ADM_Bin = sequelize.define(
         status: {
             type: DataTypes.TEXT
         },
+        camera1: {
+            type: DataTypes.TEXT
+        },
+        camera2: {
+            type: DataTypes.TEXT
+        },
+        camera3: {
+            type: DataTypes.TEXT
+        },
         areaId: {
             type: DataTypes.INTEGER,
             references: {
@@ -193,7 +205,7 @@ const ADM_Bin = sequelize.define(
             },
             onUpdate: 'CASCADE',
             onDelete: 'SET NULL'
-        }
+        },
     },
     {
         tableName: 'adm_bin',
@@ -507,6 +519,38 @@ const SUP_Vehicle_Trouble = sequelize.define(
     }
 );
 
+const VALID_Vehicle = sequelize.define(
+    'valid_vehicle',
+    {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true
+        },
+        latitude: {
+            type: DataTypes.DOUBLE, 
+            allowNull: true
+        },
+        longitude: {
+            type: DataTypes.DOUBLE, 
+            allowNull: true
+        },
+        plate: {
+            type: DataTypes.TEXT
+        },
+        model: {
+            type: DataTypes.TEXT
+        },
+        status: {
+            type: DataTypes.TEXT
+        }
+    },
+    {
+        tableName: 'valid_vehicle',
+        timestamps: true
+    }
+);
+
 async function createDB() {
     await sequelize.sync({ force: true });
     console.log('All models were synchronized successfully.');
@@ -523,5 +567,6 @@ module.exports = {
     LOG_Vehicle_Work,
     SUP_Vehicle_State,
     SUP_Vehicle_Position,
-    SUP_Vehicle_Trouble
+    SUP_Vehicle_Trouble,
+    VALID_Vehicle
 };

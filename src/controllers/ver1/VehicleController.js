@@ -2,7 +2,8 @@ const {
     ADM_Vehicle,
     SUP_Vehicle_Position,
     ADM_Task,
-    ADM_User
+    ADM_User, 
+    VALID_Vehicle
 } = require('../../models/ver1/models');
 const uploadFile = require('../uploadFileMiddleware');
 
@@ -260,10 +261,71 @@ const getVehicleById = async (req, res) => {
     }
 };
 
+const checkVehicle = async (req, res) => {
+    try {
+        let vehicleData = req.body;
+        let vehicle = await ADM_Vehicle.findOne({
+            where: {
+                plate: vehicleData.plate,
+                model: vehicleData.model,
+            },
+            raw: true
+        });
+        let validVehicle = new VALID_Vehicle({
+            latitude: vehicleData.latitude,
+            longitude: vehicleData.longitude,
+            plate: vehicleData.plate,
+            model: vehicleData.model,
+            status: "valid",
+        })
+        if (!vehicle) {
+            validVehicle.status = "invalid"
+        }
+        await validVehicle.save()
+        let resData = validVehicle.dataValues;
+        return res.status(200).json({
+            resCode: 200,
+            resMessage: 'Validation for vehicle',
+            data: resData
+        });
+    } catch (err) {
+        return res.status(500).json({
+            resCode: 500,
+            resMessage: err
+        });
+    }
+};
+
+const getVehicleValidation = async (req, res) => {
+    try {
+        let vehicles = await VALID_Vehicle.findAll({
+            raw: true
+        })
+        let valids = vehicles.filter(vehicle => vehicle.status === 'valid')
+        let invalids = vehicles.filter(vehicle => vehicle.status === 'invalid')
+    let resData = {
+        'valids': valids, 
+        'invalids': invalids
+    }
+        return res.status(200).json({
+            resCode: 200,
+            resMessage: 'OK',
+            data: resData
+        });
+    } catch (err) {
+        return res.status(500).json({
+            resCode: 500,
+            resMessage: err
+        });
+    }
+};
+
 module.exports = {
     addNewVehicle,
     deleteVehicleById,
     updateVehicleById,
     getAllVehicle,
-    getVehicleById
+    getVehicleById, 
+    checkVehicle,
+    getVehicleValidation
 };

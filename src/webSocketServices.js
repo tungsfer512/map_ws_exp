@@ -26,7 +26,6 @@ const webSocketServices = (wss) => {
             console.log(id);
             if (id[0] == 'v') {
                 id = id.substr(id.length - 1);
-                // let arr = id.split("_");
                 vehicles[id] = ws;
             }
             if (id[0] == 'g') {
@@ -63,19 +62,6 @@ const webSocketServices = (wss) => {
                         messageArray['lat'],
                         messageArray['long']
                     ];
-                    // await Vehicle.update(
-                    //     {
-                    //         latitude: messageArray['lat'],
-                    //         longitude: messageArray['long']
-                    //     },
-                    //     {
-                    //         where: {
-                    //             id: gpsID
-                    //         },
-                    //         raw: true
-                    //     }
-                    // );
-                    
                     updatePosition({
                         latitude: messageArray['lat'],
                         longitude: messageArray['long'],
@@ -133,9 +119,6 @@ const webSocketServices = (wss) => {
                             value.send(JSON.stringify(update));
                         }
                     });
-                    
-                    // console.log(eventV);
-                    // update vehicleStatelog
                 }
             } catch (err) {
                 console.log(err);
@@ -152,33 +135,6 @@ const webSocketServices = (wss) => {
                 if (arr[0] == 'bin') {
                     let binID = arr[1];
                     console.log('bin connection ' + binID);
-                    // let bin_full = await Bin.findOne({
-                    //     where: {
-                    //         id: binID
-                    //     },
-                    //     raw: true
-                    // });
-                    // console.log(bin_full);
-                    // await BinStateLog.create(
-                    //     {
-                    //         latitude: bin_full.latitude,
-                    //         longitude: bin_full.longitude,
-                    //         weight: bin_full.weight,
-                    //         description: 'bin full',
-                    //         status: 'full',
-                    //         binId: bin_full.id,
-                    //         weight: messageArray['weight']
-                    //     },
-                    //     { raw: true }
-                    // );
-                    // await Bin.update(
-                    //     {
-                    //         status: 'full',
-                    //         weight: messageArray['weight']
-                    //     },
-                    //     { where: { id: bin_full.id } },
-                    //     { raw: true }
-                    // );
                     addEvent_Bin_state({
                         weight: messageArray['weight'],
                         status: messageArray['status'],
@@ -211,27 +167,6 @@ const webSocketServices = (wss) => {
             } catch (err) {
                 console.log(err);
             }
-            // try {
-            //     let bin_weight = messageArray['id'].substr(
-            //         0,
-            //         messageArray['id'].length - 2
-            //     );
-
-            //     if (bin_weight == 'bin_weight') {
-            //         let binID = messageArray['id'].substr(
-            //             messageArray['id'].length - 1
-            //         );
-            //         console.log('bin weight connection ' + binID);
-            //         await Bin.update(
-            //             {
-            //                 weight: messageArray['weight']
-            //             },
-            //             { where: { id: binID }, raw: true }
-            //         );
-            //     }
-            // } catch (err) {
-            //     console.log(err);
-            // }
             // request get routing machine
             try {
                 let request = messageArray['id'].substr(
@@ -239,9 +174,6 @@ const webSocketServices = (wss) => {
                     messageArray['id'].length - 2
                 );
                 if (request == 'request') {
-                    // let routeID = messageArray['id'].substr(
-                    //     messageArray['id'].length - 1
-                    // );
                     console.log('request ');
                     const update = [
                         messageArray['id'],
