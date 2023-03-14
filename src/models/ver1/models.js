@@ -20,6 +20,9 @@ const ADM_Vehicle = sequelize.define(
             autoIncrement: true,
             primaryKey: true
         },
+        code: {
+            type: DataTypes.TEXT
+        },
         engineHours: {
             type: DataTypes.TEXT
         },
@@ -178,6 +181,9 @@ const ADM_Bin = sequelize.define(
         },
         brand: {
             type: DataTypes.TEXT
+        },
+        code: {
+            type: DataTypes.TEXT,
         },
         image: {
             type: DataTypes.TEXT
